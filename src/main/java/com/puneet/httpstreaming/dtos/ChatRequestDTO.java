@@ -1,4 +1,4 @@
-package com.puneet.httpstreaming;
+package com.puneet.httpstreaming.dtos;
 
 import java.util.List;
 

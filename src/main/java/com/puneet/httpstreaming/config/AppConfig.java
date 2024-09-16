@@ -1,4 +1,4 @@
-package com.puneet.httpstreaming;
+package com.puneet.httpstreaming.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

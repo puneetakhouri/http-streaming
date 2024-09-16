@@ -1,6 +1,8 @@
-package com.puneet.httpstreaming;
+package com.puneet.httpstreaming.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.puneet.httpstreaming.dtos.ChatRequestDTO;
+import com.puneet.httpstreaming.dtos.ChatResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;

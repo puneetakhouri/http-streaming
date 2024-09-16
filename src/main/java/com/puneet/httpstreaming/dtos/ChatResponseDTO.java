@@ -1,4 +1,4 @@
-package com.puneet.httpstreaming;
+package com.puneet.httpstreaming.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
