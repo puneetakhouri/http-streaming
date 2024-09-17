@@ -74,6 +74,20 @@ public class ChatController {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(List.of(MediaType.parseMediaType("application/x-ndjson")));
 
+        String query = requestDTO.getMessages().get(0).getContent();
+        StringBuilder builder = new StringBuilder();
+        builder.append("prompt: goal is to classify user action and get the desired intent. The intents along with the " +
+                "description are - ORDER_LIST - This intent is used when a user is looking for his order list. Example -" +
+                " when a user mentions, show me my orders then this shows he wants to see his orders. Similarly another " +
+                "example could be when he simply mentions last orders, here also he is looking for his order listing. " +
+                "Next intent is ORDER_DETAILS - This intent is to show details of a given order to the user. Examples " +
+                "if a user asks where is my order, then this points to ORDER_DETAILS intent.Another example is when user " +
+                "mentions that where is my shipment, since shipment belongs to a particular order hence the user is " +
+                "looking for order details hence this also points to ORDER_DETAILS intent. Always return the response in " +
+                "following format- INTENT: {}, Reasoning: {}, alternate matching intents: []. query: ");
+        builder.append(query);
+        requestDTO.getMessages().get(0).setContent(builder.toString());
+
         HttpEntity<ChatRequestDTO> requestEntity = new HttpEntity<>(requestDTO, headers);
 
         List<ChatResponseDTO> responseList = new ArrayList<>();
@@ -119,6 +133,20 @@ public class ChatController {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setAccept(List.of(MediaType.parseMediaType("application/x-ndjson")));
+
+            String query = requestDTO.getMessages().get(0).getContent();
+            StringBuilder builder = new StringBuilder();
+            builder.append("prompt: goal is to classify user action and get the desired intent. The intents along with the " +
+                    "description are - ORDER_LIST - This intent is used when a user is looking for his order list. Example -" +
+                    " when a user mentions, show me my orders then this shows he wants to see his orders. Similarly another " +
+                    "example could be when he simply mentions last orders, here also he is looking for his order listing. " +
+                    "Next intent is ORDER_DETAILS - This intent is to show details of a given order to the user. Examples " +
+                    "if a user asks where is my order, then this points to ORDER_DETAILS intent.Another example is when user " +
+                    "mentions that where is my shipment, since shipment belongs to a particular order hence the user is " +
+                    "looking for order details hence this also points to ORDER_DETAILS intent. Always return the response in " +
+                    "following format- INTENT: {}, Reasoning: {}, alternate matching intents: []. query: ");
+            builder.append(query);
+            requestDTO.getMessages().get(0).setContent(builder.toString());
 
             HttpEntity<ChatRequestDTO> requestEntity = new HttpEntity<>(requestDTO, headers);
 
