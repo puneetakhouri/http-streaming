@@ -3,6 +3,8 @@ package com.puneet.httpstreaming.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puneet.httpstreaming.dtos.ChatRequestDTO;
 import com.puneet.httpstreaming.dtos.ChatResponseDTO;
+import com.puneet.httpstreaming.dtos.GenerateRequest;
+import com.puneet.httpstreaming.dtos.GenerateResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -151,5 +153,49 @@ public class ChatController {
 
 
         return new ResponseEntity(stream, HttpStatus.OK);
+    }
+
+    @PostMapping("/chat/generate")
+    public ResponseEntity<GenerateResponse> generateResponse(@RequestBody GenerateRequest requestDTO) {
+        String url = "http://localhost:11434/api/generate";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(List.of(MediaType.parseMediaType("application/x-ndjson")));
+
+        HttpEntity<GenerateRequest> requestEntity = new HttpEntity<>(requestDTO, headers);
+
+        List<GenerateResponse> responseList = new ArrayList<>();
+
+        try {
+            restTemplate.execute(url, HttpMethod.POST, clientHttpRequest -> {
+                clientHttpRequest.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+                clientHttpRequest.getHeaders().setAccept(List.of(MediaType.parseMediaType("application/x-ndjson")));
+                clientHttpRequest.getBody().write(objectMapper.writeValueAsBytes(requestDTO));
+            }, clientHttpResponse -> {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientHttpResponse.getBody()))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        if (!line.trim().isEmpty()) {
+                            GenerateResponse responseDTO = objectMapper.readValue(line, GenerateResponse.class);
+                            responseList.add(responseDTO);
+                        }
+                    }
+                }
+                return null;
+            });
+        } catch (Exception e) {
+            // Handle exceptions appropriately
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        StringBuilder responseBuilder = new StringBuilder();
+        responseList.forEach(chatResponseDTO -> {
+            responseBuilder.append(chatResponseDTO.getResponse());
+        });
+
+        GenerateResponse chatResponseDTO = responseList.get(responseList.size() - 1);
+        chatResponseDTO.setResponse(responseBuilder.toString());
+        return ResponseEntity.ok(chatResponseDTO);
     }
 }
